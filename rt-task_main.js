@@ -1,5 +1,3 @@
-https://songw02.github.io/Reaction-Time-Task/img/blue.png
-
 /* create timeline */
 var timeline = [];
 
