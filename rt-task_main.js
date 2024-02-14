@@ -34,29 +34,31 @@ timeline.push(instructions);
 /* test trials */
 
 var test_stimuli = [{
-    stimulus: repo_site + "img/blue.png", // Change 3: Adding `repo_site` in `test_stimuli`
-    data: {
-        test_part: 'test',
-        correct_response: 'f'
+        stimulus: repo_site + "img/blue.png", // Change 3: Adding `repo_site` in `test_stimuli`
+        data: {
+            test_part: 'test',
+            correct_response: 'f'
+        }
+    },
+    {
+        stimulus: repo_site + "img/orange.png", // Change 3: Adding `repo_site` in `test_stimuli`
+        data: {
+            test_part: 'test',
+            correct_response: 'j'
+        }
     }
-},
-{
-    stimulus: repo_site + "img/orange.png", // Change 3: Adding `repo_site` in `test_stimuli`
-    data: {
-        test_part: 'test',
-        correct_response: 'j'
-    }
-}
 ];
 
 var fixation = {
     type: 'html-keyboard-response',
     stimulus: '<div style="font-size:60px;">+</div>',
     choices: jsPsych.NO_KEYS,
-    trial_duration: function(){
-    return jsPsych.randomization.sampleWithoutReplacement([250, 500, 750, 1000, 1250, 1500, 1750, 2000], 1)[0];
+    trial_duration: function () {
+        return jsPsych.randomization.sampleWithoutReplacement([250, 500, 750, 1000, 1250, 1500, 1750, 2000], 1)[0];
     },
-    data: {test_part: 'fixation'}
+    data: {
+        test_part: 'fixation'
+    }
 }
 
 var test = {
@@ -64,8 +66,8 @@ var test = {
     stimulus: jsPsych.timelineVariable('stimulus'),
     choices: ['f', 'j'],
     data: jsPsych.timelineVariable('data'),
-    on_finish: function(data){
-    data.correct = data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.correct_response);
+    on_finish: function (data) {
+        data.correct = data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.correct_response);
     },
 }
 
@@ -81,16 +83,20 @@ timeline.push(test_procedure);
 
 var debrief_block = {
     type: "html-keyboard-response",
-    stimulus: function() {
+    stimulus: function () {
 
-    var trials = jsPsych.data.get().filter({test_part: 'test'});
-    var correct_trials = trials.filter({correct: true});
-    var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
-    var rt = Math.round(correct_trials.select('rt').mean());
+        var trials = jsPsych.data.get().filter({
+            test_part: 'test'
+        });
+        var correct_trials = trials.filter({
+            correct: true
+        });
+        var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+        var rt = Math.round(correct_trials.select('rt').mean());
 
-    return "<p>You responded correctly on "+accuracy+"% of the trials.</p>"+
-    "<p>Your average response time was "+rt+"ms.</p>"+
-    "<p>Press any key to complete the experiment. Thank you!</p>";
+        return "<p>You responded correctly on " + accuracy + "% of the trials.</p>" +
+            "<p>Your average response time was " + rt + "ms.</p>" +
+            "<p>Press any key to complete the experiment. Thank you!</p>";
 
     }
 };
