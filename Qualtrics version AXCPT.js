@@ -38,7 +38,7 @@ function createRandomTrial() {
 }
 
 // Parameters to control the number of each type of trial
-const numNormalTrials = 1; // Total normal trials
+const numNormalTrials = 1; // Total normal trials Random trial vs Target trial is 4 vs 6 In other cases still use 7:1:1:!
 const numRandomTrials = 5; // Total random trials
 
 // Generate trials
