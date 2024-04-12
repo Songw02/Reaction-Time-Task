@@ -80,20 +80,21 @@ trials.forEach(trial => {
     trial_duration: 4900
   });
 
-  // Probe letter and response window
+  // Probe letter and initial response window
   timeline.push({
     type: "html-keyboard-response",
     stimulus: trial.probe_stimulus,
     choices: ['f', 'j'],
-    trial_duration: 300
+    trial_duration: 300, // Duration of probe display
+    data: { correct_response: trial.correct_response }
   });
 
+  // Extend response window to capture late responses
   timeline.push({
     type: "html-keyboard-response",
-    stimulus: '',
+    stimulus: '', // No stimulus, just capture the response
     choices: ['f', 'j'],
-    trial_duration: 1000,
-    data: { correct_response: trial.correct_response },
+    trial_duration: 1000, // Extended duration to capture responses
     on_finish: function(data) {
       data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
     }
