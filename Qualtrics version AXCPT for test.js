@@ -21,7 +21,7 @@ function weightedRandomSelect() {
 }
 
 // Parameters to control the number of each type of trial
-const numTrials = 5; // Set to 100 or any other number based on your experimental design
+const numTrials = 3; // Set to 100 or any other number based on your experimental design
 
 // Generate trials
 let trials = [];
