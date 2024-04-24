@@ -1,13 +1,3 @@
-/* Fullscreen entry at the start */
-var enter_fullscreen = {
-  type: fullscreen,
-  fullscreen_mode: true
-}
-
-var exit_fullscreen = {
-  type: fullscreen,
-  fullscreen_mode: false
-}
 
 // Assuming A, B, X, and Y are not part of the random letter pairs to avoid overlap with normal trials
 const letters = "CDEFGHIJKLMNOPQRSTUVWXYZ".split('');
@@ -54,7 +44,11 @@ shuffleArray(trials);
 var timeline = [];
 
 /* enter full screen mode */
-timeline.push(enter_fullscreen);
+timeline.push({
+  type: fullscreen,
+  fullscreen_mode: true
+})
+;
 
 /* Welcome and instructions */
 timeline.push({
@@ -131,4 +125,7 @@ trials.forEach(trial => {
 });
 
 /* exit full screen mode */
-timeline.push(exit_fullscreen)
+timeline.push({
+  type: fullscreen,
+  fullscreen_mode: false
+})
