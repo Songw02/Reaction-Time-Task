@@ -20,16 +20,12 @@ function weightedRandomSelect() {
   }
 }
 
-// Parameters to control the number of each type of trial
 const numTrials = 3; // Set to 100 or any other number based on your experimental design
-
-// Generate trials
 let trials = [];
 for (let i = 0; i < numTrials; i++) {
   trials.push(weightedRandomSelect());
 }
 
-// Shuffle trials to mix them
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -39,10 +35,8 @@ function shuffleArray(array) {
 
 shuffleArray(trials);
 
-/* Create jsPsych timeline */
 var timeline = [];
 
-/* Welcome and instructions */
 timeline.push({
   type: "html-keyboard-response",
   stimulus: "Welcome to the experiment. Press any key to begin."
@@ -54,9 +48,9 @@ timeline.push({
   post_trial_gap: 2000
 });
 
-// Adding trials to the timeline
+let responseGivenDuringProbe = false;
+
 trials.forEach(trial => {
-  // Fixation
   timeline.push({
     type: "html-keyboard-response",
     stimulus: '<div style="font-size:60px;">+</div>',
@@ -64,7 +58,6 @@ trials.forEach(trial => {
     trial_duration: 300
   });
 
-  // Cue letter
   timeline.push({
     type: "html-keyboard-response",
     stimulus: trial.cue_stimulus,
@@ -72,7 +65,6 @@ trials.forEach(trial => {
     trial_duration: 300
   });
 
-  // Delay (empty screen)
   timeline.push({
     type: "html-keyboard-response",
     stimulus: '',
@@ -80,55 +72,46 @@ trials.forEach(trial => {
     trial_duration: 4900
   });
 
-  // Probe letter and initial response window
   timeline.push({
     type: "html-keyboard-response",
     stimulus: trial.probe_stimulus,
     choices: ['f', 'j'],
     trial_duration: 300, // Duration of probe display
     data: {
-      correct_response: trial.correct_response,
-      response_recorded: false  // New flag to track if a response is recorded
+      correct_response: trial.correct_response
     },
     on_finish: function(data) {
       data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
-      if (data.response !== null) {
-        data.response_recorded = true;  // Set flag if response is made
-      }
+      responseGivenDuringProbe = data.response !== null;
     }
   });
 
-  // Extend response window to capture late responses
+  // Conditional node to check if extending the response window is necessary
   timeline.push({
-    type: "html-keyboard-response",
-    stimulus: '', // No stimulus, just capture the response
-    choices: ['f', 'j'],
-    trial_duration: 1000, // Extended duration to capture responses
-    data: {
-      correct_response: trial.correct_response,
-      response_recorded: false  // Continue tracking if a response is recorded
-    },
-    on_finish: function(data) {
-      if (data.response !== null) {
-        data.response_recorded = true;  // Update flag if response is made here
-        data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response); // Evaluate correctness of the response
+    timeline: [{
+      type: "html-keyboard-response",
+      stimulus: '', // No stimulus, just capture the response
+      choices: ['f', 'j'],
+      trial_duration: 1000, // Extended duration to capture responses
+      data: {
+        correct_response: trial.correct_response
+      },
+      on_finish: function(data) {
+        if (data.response !== null) {
+          data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response); // Evaluate correctness of the response
+        }
       }
+    }],
+    conditional_function: function() {
+      // Check if response was given during the probe; if so, skip the extension
+      return !responseGivenDuringProbe;
     }
   });
 
-  // End trial message
   timeline.push({
     type: "html-keyboard-response",
     stimulus: function() {
-      var lastTrialData = jsPsych.data.get().last(2).values(); // Retrieve the last two trials
-      var probeResponse = lastTrialData[0].response_recorded;
-      var extendedResponse = lastTrialData[1].response_recorded;
-      
-      if (!probeResponse && !extendedResponse) {
-        return "Response too slow, please respond faster in the next trial.";
-      } else {
-        return "The response window is closed, the next trial will begin.";
-      }
+      return "The response window is closed, the next trial will begin.";
     },
     choices: jsPsych.NO_KEYS,
     trial_duration: 900
