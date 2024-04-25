@@ -20,16 +20,12 @@ function weightedRandomSelect() {
   }
 }
 
-// Parameters to control the number of each type of trial
-const numTrials = 3; // Set to 100 or any other number based on your experimental design
-
-// Generate trials
+const numTrials = 3; // Adjust as necessary
 let trials = [];
 for (let i = 0; i < numTrials; i++) {
   trials.push(weightedRandomSelect());
 }
 
-// Shuffle trials to mix them
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -39,10 +35,8 @@ function shuffleArray(array) {
 
 shuffleArray(trials);
 
-/* Create jsPsych timeline */
 var timeline = [];
 
-/* Welcome and instructions */
 timeline.push({
   type: "html-keyboard-response",
   stimulus: "Welcome to the experiment. Press any key to begin."
@@ -54,9 +48,7 @@ timeline.push({
   post_trial_gap: 2000
 });
 
-// Adding trials to the timeline
 trials.forEach(trial => {
-  // Fixation
   timeline.push({
     type: "html-keyboard-response",
     stimulus: '<div style="font-size:60px;">+</div>',
@@ -64,7 +56,6 @@ trials.forEach(trial => {
     trial_duration: 300
   });
 
-  // Cue letter
   timeline.push({
     type: "html-keyboard-response",
     stimulus: trial.cue_stimulus,
@@ -72,7 +63,6 @@ trials.forEach(trial => {
     trial_duration: 300
   });
 
-  // Delay (empty screen)
   timeline.push({
     type: "html-keyboard-response",
     stimulus: '',
@@ -80,48 +70,46 @@ trials.forEach(trial => {
     trial_duration: 4900
   });
 
-  // Probe letter and initial response window
   timeline.push({
     type: "html-keyboard-response",
     stimulus: trial.probe_stimulus,
     choices: ['f', 'j'],
-    trial_duration: 300, // Duration of probe display
+    trial_duration: 300,
     data: { correct_response: trial.correct_response }
   });
 
-  // Extend response window to capture late responses
-timeline.push({
-  type: "html-keyboard-response",
-  stimulus: '', // No stimulus, just capture the response
-  choices: ['f', 'j'],
-  trial_duration: 1000, // Extended duration to capture responses
-  on_finish: function(data) {
-    // Calculate if the response was within the initial window (300 ms)
-    if (data.rt <= 300) {
-      data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
-      data.isLate = false; // Response within the initial window
-    } else if (data.rt > 300 && data.rt <= 1300) {
-      data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
-      data.isLate = true; // Response within the extended window but after the initial window
-    } else {
-      data.isLate = true; // Response too slow or no response at all
+  timeline.push({
+    type: "html-keyboard-response",
+    stimulus: '', // No stimulus, just capture the response
+    choices: ['f', 'j'],
+    trial_duration: 1000,
+    on_finish: function(data) {
+      if (data.rt <= 300) {
+        data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
+        data.isLate = false;
+      } else if (data.rt > 300 && data.rt <= 1300) {
+        data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
+        data.isLate = true;
+      } else {
+        data.isLate = true;
+      }
     }
-  }
+  });
+
+  timeline.push({
+    type: "html-keyboard-response",
+    stimulus: function() {
+      var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
+      if (lastTrialData.rt === null) {
+        return "Response too slow, please respond faster in the next trial.";
+      } else if (lastTrialData.isLate) {
+        return "Your response was late. Please try to respond faster.";
+      } else {
+        return "The response window is closed, the next trial will begin.";
+      }
+    },
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 900
+  });
 });
 
-// End trial message
-timeline.push({
-  type: "html-keyboard-response",
-  stimulus: function() {
-    var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
-    if (lastTrialData.rt === null) {
-      return "Response too slow, please respond faster in the next trial.";
-    } else if (lastTrialData.isLate) {
-      return "Your response was late. Please try to respond faster.";
-    } else {
-      return "The response window is closed, the next trial will begin.";
-    }
-  },
-  choices: jsPsych.NO_KEYS,
-  trial_duration: 900
-});
