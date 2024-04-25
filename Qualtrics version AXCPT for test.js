@@ -98,38 +98,39 @@ trials.forEach(trial => {
     }
   });
 
-// Extend response window to capture late responses
-timeline.push({
-  type: "html-keyboard-response",
-  stimulus: '', // No stimulus, just capture the response
-  choices: ['f', 'j'],
-  trial_duration: 1000, // Extended duration to capture responses
-  data: {
-    correct_response: trial.correct_response, // Ensuring correct_response is available
-    response_recorded: false  // New flag to track if a response is recorded
-  },
-  on_finish: function(data) {
-    if (data.response !== null) {
-      data.response_recorded = true;  // Update flag if response is made here
-      data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response); // Evaluate correctness of the response
+  // Extend response window to capture late responses
+  timeline.push({
+    type: "html-keyboard-response",
+    stimulus: '', // No stimulus, just capture the response
+    choices: ['f', 'j'],
+    trial_duration: 1000, // Extended duration to capture responses
+    data: {
+      correct_response: trial.correct_response,
+      response_recorded: false  // Continue tracking if a response is recorded
+    },
+    on_finish: function(data) {
+      if (data.response !== null) {
+        data.response_recorded = true;  // Update flag if response is made here
+        data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response); // Evaluate correctness of the response
+      }
     }
-  }
-});
+  });
 
-// End trial message
-timeline.push({
-  type: "html-keyboard-response",
-  stimulus: function() {
-    var lastTrialData = jsPsych.data.get().last(2).values(); // Retrieve the last two trials
-    var probeResponse = lastTrialData[0].response_recorded;
-    var extendedResponse = lastTrialData[1].response_recorded;
-    
-    if (!probeResponse && !extendedResponse) {
-      return "Response too slow, please respond faster in the next trial.";
-    } else {
-      return "The response window is closed, the next trial will begin.";
-    }
-  },
-  choices: jsPsych.NO_KEYS,
-  trial_duration: 900
+  // End trial message
+  timeline.push({
+    type: "html-keyboard-response",
+    stimulus: function() {
+      var lastTrialData = jsPsych.data.get().last(2).values(); // Retrieve the last two trials
+      var probeResponse = lastTrialData[0].response_recorded;
+      var extendedResponse = lastTrialData[1].response_recorded;
+      
+      if (!probeResponse && !extendedResponse) {
+        return "Response too slow, please respond faster in the next trial.";
+      } else {
+        return "The response window is closed, the next trial will begin.";
+      }
+    },
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 900
+  });
 });
