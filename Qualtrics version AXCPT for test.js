@@ -20,17 +20,29 @@ function weightedRandomSelect() {
   }
 }
 
-const numTrials = 3; // Adjust number of trials as needed
+// Parameters to control the number of each type of trial
+const numTrials = 3; // Set to 100 or any other number based on your experimental design
 
+// Generate trials
 let trials = [];
 for (let i = 0; i < numTrials; i++) {
   trials.push(weightedRandomSelect());
 }
 
+// Shuffle trials to mix them
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
 shuffleArray(trials);
 
+/* Create jsPsych timeline */
 var timeline = [];
 
+/* Welcome and instructions */
 timeline.push({
   type: "html-keyboard-response",
   stimulus: "Welcome to the experiment. Press any key to begin."
@@ -42,7 +54,9 @@ timeline.push({
   post_trial_gap: 2000
 });
 
+// Adding trials to the timeline
 trials.forEach(trial => {
+  // Fixation
   timeline.push({
     type: "html-keyboard-response",
     stimulus: '<div style="font-size:60px;">+</div>',
@@ -50,6 +64,7 @@ trials.forEach(trial => {
     trial_duration: 300
   });
 
+  // Cue letter
   timeline.push({
     type: "html-keyboard-response",
     stimulus: trial.cue_stimulus,
@@ -57,6 +72,7 @@ trials.forEach(trial => {
     trial_duration: 300
   });
 
+  // Delay (empty screen)
   timeline.push({
     type: "html-keyboard-response",
     stimulus: '',
@@ -64,42 +80,56 @@ trials.forEach(trial => {
     trial_duration: 4900
   });
 
+  // Probe letter and initial response window
   timeline.push({
     type: "html-keyboard-response",
     stimulus: trial.probe_stimulus,
     choices: ['f', 'j'],
-    trial_duration: 300,
-    data: { correct_response: trial.correct_response },
+    trial_duration: 300, // Duration of probe display
+    data: {
+      correct_response: trial.correct_response,
+      response_recorded: false  // New flag to track if a response is recorded
+    },
     on_finish: function(data) {
       data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
-    }
-  });
-
-  timeline.push({
-    type: "html-keyboard-response",
-    stimulus: '',
-    choices: ['f', 'j'],
-    trial_duration: 1000,
-    on_finish: function(data) {
-      let lastTrialData = jsPsych.data.get().last(2).values()[0];
-      data.correct = jsPsych.pluginAPI.compareKeys(data.response, lastTrialData.correct_response);
-    }
-  });
-
-  timeline.push({
-    type: "html-keyboard-response",
-    stimulus: function() {
-      var lastTrialData = jsPsych.data.get().last(2).values();
-      var probeResponse = lastTrialData[0].response_recorded;
-      var extendedResponse = lastTrialData[1].response_recorded;
-
-      if (!probeResponse && !extendedResponse) {
-        return "Response too slow, please respond faster in the next trial.";
-      } else {
-        return "The response window is closed, the next trial will begin.";
+      if (data.response !== null) {
+        data.response_recorded = true;  // Set flag if response is made
       }
-    },
-    choices: jsPsych.NO_KEYS,
-    trial_duration: 900
+    }
   });
+
+// Extend response window to capture late responses
+timeline.push({
+  type: "html-keyboard-response",
+  stimulus: '', // No stimulus, just capture the response
+  choices: ['f', 'j'],
+  trial_duration: 1000, // Extended duration to capture responses
+  data: {
+    correct_response: trial.correct_response, // Ensuring correct_response is available
+    response_recorded: false  // New flag to track if a response is recorded
+  },
+  on_finish: function(data) {
+    if (data.response !== null) {
+      data.response_recorded = true;  // Update flag if response is made here
+      data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response); // Evaluate correctness of the response
+    }
+  }
+});
+
+// End trial message
+timeline.push({
+  type: "html-keyboard-response",
+  stimulus: function() {
+    var lastTrialData = jsPsych.data.get().last(2).values(); // Retrieve the last two trials
+    var probeResponse = lastTrialData[0].response_recorded;
+    var extendedResponse = lastTrialData[1].response_recorded;
+    
+    if (!probeResponse && !extendedResponse) {
+      return "Response too slow, please respond faster in the next trial.";
+    } else {
+      return "The response window is closed, the next trial will begin.";
+    }
+  },
+  choices: jsPsych.NO_KEYS,
+  trial_duration: 900
 });
