@@ -20,7 +20,7 @@ function weightedRandomSelect() {
   }
 }
 
-const numTrials = 3; // Adjust as necessary
+const numTrials = 3; // Set to 100 or any other number based on your experimental design
 let trials = [];
 for (let i = 0; i < numTrials; i++) {
   trials.push(weightedRandomSelect());
@@ -32,11 +32,9 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-
 shuffleArray(trials);
 
 var timeline = [];
-
 timeline.push({
   type: "html-keyboard-response",
   stimulus: "Welcome to the experiment. Press any key to begin."
@@ -80,19 +78,12 @@ trials.forEach(trial => {
 
   timeline.push({
     type: "html-keyboard-response",
-    stimulus: '', // No stimulus, just capture the response
+    stimulus: '', 
     choices: ['f', 'j'],
     trial_duration: 1000,
     on_finish: function(data) {
-      if (data.rt <= 300) {
-        data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
-        data.isLate = false;
-      } else if (data.rt > 300 && data.rt <= 1300) {
-        data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
-        data.isLate = true;
-      } else {
-        data.isLate = true;
-      }
+      data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+      data.isLate = data.rt > 300 && data.rt <= 1300;
     }
   });
 
@@ -100,7 +91,7 @@ trials.forEach(trial => {
     type: "html-keyboard-response",
     stimulus: function() {
       var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
-      if (lastTrialData.rt === null) {
+      if (lastTrialData.response === null) {
         return "Response too slow, please respond faster in the next trial.";
       } else if (lastTrialData.isLate) {
         return "Your response was late. Please try to respond faster.";
@@ -112,4 +103,5 @@ trials.forEach(trial => {
     trial_duration: 900
   });
 });
+
 
