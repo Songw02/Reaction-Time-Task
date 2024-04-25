@@ -90,28 +90,38 @@ trials.forEach(trial => {
   });
 
   // Extend response window to capture late responses
-  timeline.push({
-    type: "html-keyboard-response",
-    stimulus: '', // No stimulus, just capture the response
-    choices: ['f', 'j'],
-    trial_duration: 1000, // Extended duration to capture responses
-    on_finish: function(data) {
+timeline.push({
+  type: "html-keyboard-response",
+  stimulus: '', // No stimulus, just capture the response
+  choices: ['f', 'j'],
+  trial_duration: 1000, // Extended duration to capture responses
+  on_finish: function(data) {
+    // Calculate if the response was within the initial window (300 ms)
+    if (data.rt <= 300) {
       data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
+      data.isLate = false; // Response within the initial window
+    } else if (data.rt > 300 && data.rt <= 1300) {
+      data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
+      data.isLate = true; // Response within the extended window but after the initial window
+    } else {
+      data.isLate = true; // Response too slow or no response at all
     }
-  });
+  }
+});
 
-  // End trial message
-  timeline.push({
-    type: "html-keyboard-response",
-    stimulus: function() {
-      var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
-      if(lastTrialData.response === null) {
-        return "Response too slow, please respond faster in the next trial.";
-      } else {
-        return "The response window is closed, the next trial will begin.";
-      }
-    },
-    choices: jsPsych.NO_KEYS,
-    trial_duration: 900
-  });
+// End trial message
+timeline.push({
+  type: "html-keyboard-response",
+  stimulus: function() {
+    var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
+    if (lastTrialData.rt === null) {
+      return "Response too slow, please respond faster in the next trial.";
+    } else if (lastTrialData.isLate) {
+      return "Your response was late. Please try to respond faster.";
+    } else {
+      return "The response window is closed, the next trial will begin.";
+    }
+  },
+  choices: jsPsych.NO_KEYS,
+  trial_duration: 900
 });
