@@ -29,6 +29,9 @@ for (let i = 0; i < numTrials; i++) {
   trials.push(weightedRandomSelect());
 }
 
+console.log(trials.length);
+console.log(trials); //log trial generated
+
 // Shuffle trials to mix them
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
