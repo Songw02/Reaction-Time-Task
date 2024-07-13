@@ -106,3 +106,11 @@ trials.forEach(trial => {
     trial_duration: 900
   });
 });
+
+// Start the experiment
+jsPsych.init({
+  timeline: timeline,
+  on_finish: function() {
+    jsPsych.data.displayData();
+  }
+});
