@@ -57,12 +57,12 @@ trials.forEach(trial => {
   });
 
   // Cue letter
-  timeline.push({
-    type: "html-keyboard-response",
-    stimulus: trial.cue_stimulus,
-    choices: jsPsych.NO_KEYS,
-    trial_duration: 300
-  });
+//  timeline.push({
+//    type: "html-keyboard-response",
+//    stimulus: trial.cue_stimulus,
+//    choices: jsPsych.NO_KEYS,
+//    trial_duration: 300
+//  });
 
   // Delay (empty screen)
   timeline.push({
