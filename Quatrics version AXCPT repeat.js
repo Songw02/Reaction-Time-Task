@@ -1,4 +1,3 @@
-// Assuming A, B, X, and Y are not part of the random letter pairs to avoid overlap with normal trials
 const letters = "CDEFGHIJKLMNOPQRSTUVWXYZ".split('');
 
 function weightedRandomSelect() {
@@ -47,14 +46,14 @@ var timeline = [];
 
 
 // Adding trials to the timeline
-trials.forEach(trial => {
+//trials.forEach(trial => {
   // Fixation
-  timeline.push({
-    type: "html-keyboard-response",
-    stimulus: '<div style="font-size:60px;">+</div>',
-    choices: jsPsych.NO_KEYS,
-    trial_duration: 300
-  });
+//  timeline.push({
+//    type: "html-keyboard-response",
+//    stimulus: '<div style="font-size:60px;">+</div>',
+//    choices: jsPsych.NO_KEYS,
+//    trial_duration: 300
+//  });
 
   // Cue letter
 //  timeline.push({
@@ -106,4 +105,4 @@ trials.forEach(trial => {
     choices: jsPsych.NO_KEYS,
     trial_duration: 900
   });
-});
+
