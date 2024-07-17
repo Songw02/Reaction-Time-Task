@@ -1,5 +1,5 @@
-// Assuming A, B, X, and Y are not part of the random letter pairs to avoid overlap with normal trials
-const letters = "CDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+// // Assuming A, B, X, and Y are not part of the random letter pairs to avoid overlap with normal trials
+// const letters = "CDEFGHIJKLMNOPQRSTUVWXYZ".split('');
 
 function weightedRandomSelect() {
   var weightedStimuli = [
