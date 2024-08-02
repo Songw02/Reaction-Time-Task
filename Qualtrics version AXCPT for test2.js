@@ -140,8 +140,22 @@ window.AXCPT_test = (function() {
     // Qualtrics.SurveyEngine.setEmbeddedData("accuracy", accuracy);
     // Qualtrics.SurveyEngine.setEmbeddedData("rt", rt);
     // The Json string
-    let jsonData_testing = JSON.stringify(jsPsych.data.get().json());
-    Qualtrics.SurveyEngine.setEmbeddedData("jsPsychData_testing", jsonData_testing);
+   // let jsonData_testing = JSON.stringify(jsPsych.data.get().json());
+    var trial_data = jsPsych.data.values();
+
+    var offset=0;
+    var chunk_size = 120;
+    var block = 0;
+    while (offset < trial_data.length){
+      let curr_data = trial_data.slice(offset, chunk_size);
+      let varname = "jsPsychData_testing_"+block;
+
+      Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
+
+      offset += chunk_size;
+    }
+
+    //Qualtrics.SurveyEngine.setEmbeddedData("jsPsychData_testing", jsonData_testing);
         /* Change 6: Adding the clean up and continue functions.*/
         // clear the stage
     jQuery('#display_stage').remove();
