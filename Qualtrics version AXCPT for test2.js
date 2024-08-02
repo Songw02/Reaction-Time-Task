@@ -38,7 +38,7 @@ window.AXCPT_test = (function() {
 
   shuffleArray(trials);
 
-  core.timeline = [];
+  let timeline = [];
 
   timeline.push({
     type: "html-keyboard-response",
@@ -119,6 +119,9 @@ window.AXCPT_test = (function() {
       choices: jsPsych.NO_KEYS,
       trial_duration: 900
     });
+
+    // Assign the final timeline
+    core.timeline = timeline;
   });
 
   core.on_finish = function (data) {
