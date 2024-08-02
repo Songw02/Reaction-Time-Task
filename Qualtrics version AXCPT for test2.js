@@ -23,7 +23,7 @@ window.AXCPT_test = (function() {
     }
   }
 
-  const numTrials = 3; // Set to 100 or any other number based on your experimental design
+  const numTrials = 1; // Set to 100 or any other number based on your experimental design
   let trials = [];
   for (let i = 0; i < numTrials; i++) {
     trials.push(weightedRandomSelect());
@@ -148,7 +148,7 @@ window.AXCPT_test = (function() {
     jQuery('#display_stage_background').remove();
 
     // simulate click on Qualtrics "next" button, making use of the Qualtrics JS API
-    this.clickNextButton();
+    // this.clickNextButton();
 }
 
   return core
