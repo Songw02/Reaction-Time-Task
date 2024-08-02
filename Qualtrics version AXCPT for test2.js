@@ -148,7 +148,7 @@ window.AXCPT_test = (function() {
     jQuery('#display_stage_background').remove();
 
     // simulate click on Qualtrics "next" button, making use of the Qualtrics JS API
-    qthis.clickNextButton();
+    this.clickNextButton();
 }
 
   return core
