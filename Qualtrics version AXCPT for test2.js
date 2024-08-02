@@ -23,7 +23,7 @@ window.AXCPT_test = (function() {
     }
   }
 
-  const numTrials = 1; // Set to 100 or any other number based on your experimental design
+  const numTrials = 6; // Set to 100 or any other number based on your experimental design
   let trials = [];
   for (let i = 0; i < numTrials; i++) {
     trials.push(weightedRandomSelect());
