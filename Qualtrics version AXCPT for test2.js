@@ -154,6 +154,7 @@ window.AXCPT_test = (function() {
       Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
 
       offset += chunk_size;
+      block += 1;
     }
 
     //Qualtrics.SurveyEngine.setEmbeddedData("jsPsychData_testing", jsonData_testing);

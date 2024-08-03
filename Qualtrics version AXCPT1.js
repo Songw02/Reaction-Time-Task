@@ -141,6 +141,7 @@ core.on_finish = function (data) {
     Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
 
     offset += chunk_size;
+    block += 1;
   }
 
   jQuery('#display_stage').remove();
