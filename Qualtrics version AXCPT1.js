@@ -135,12 +135,13 @@ core.on_finish = function (data) {
   var chunk_size = 120;
   var block = 0;
   while (offset < trial_data.length){
+    let end_of_data = offset + chunk_size;
     let curr_data = trial_data.slice(offset, chunk_size);
     let varname = "jsPsychData_AXCPT1_"+block;
 
     Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
 
-    offset += chunk_size;
+    offset = end_of_data;
     block += 1;
   }
 
