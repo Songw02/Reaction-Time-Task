@@ -142,7 +142,7 @@ window.AXCPT_test = (function() {
     // Qualtrics.SurveyEngine.setEmbeddedData("rt", rt);
     // The Json string
    // let jsonData_testing = JSON.stringify(jsPsych.data.get().json());
-    var trial_data = jsPsych.data.values();
+    var trial_data = jsPsych.data.get().values();
 
     var offset=0;
     var chunk_size = 120;
