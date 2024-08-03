@@ -23,12 +23,13 @@ window.AXCPT_test = (function() {
     }
   }
 
-  const numTrials = 6; // Set to 100 or any other number based on your experimental design
+  const numTrials = 3; // Set to 100 or any other number based on your experimental design
   let trials = [];
   for (let i = 0; i < numTrials; i++) {
     trials.push(weightedRandomSelect());
   }
-
+  console.log(trials.length);
+  console.log(trials); //log trial generated
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
