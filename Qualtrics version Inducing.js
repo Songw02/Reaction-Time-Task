@@ -127,28 +127,28 @@ window.INDUCING = (function() {
 
   });
 
-  core.on_finish = function (data) {
+core.on_finish = function (data) {
 
-    var trial_data = jsPsych.data.get().values();
+  var trial_data = jsPsych.data.get().values();
 
-    var offset=0;
-    var chunk_size = 120;
-    var block = 0;
-    while (offset < trial_data.length){
-      let end_of_data = offset + chunk_size;
-      let curr_data = trial_data.slice(offset, end_of_data);
-      let varname = "jsPsychData_inducing_"+block;
+  var offset=0;
+  var chunk_size = 120;
+  var block = 0;
+  while (offset < trial_data.length){
+    let end_of_data = offset + chunk_size;
+    let curr_data = trial_data.slice(offset, end_of_data);
+    let varname = "jsPsychData_inducing_"+block;
 
-      Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
+    Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
 
-      offset = end_of_data;
-      block += 1;
-    }
-
-    jQuery('#display_stage').remove();
-    jQuery('#display_stage_background').remove();
-
+    offset = end_of_data;
+    block += 1;
   }
+
+  jQuery('#display_stage').remove();
+  jQuery('#display_stage_background').remove();
+
+}
 
 return core
 })()
