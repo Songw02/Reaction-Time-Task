@@ -1,5 +1,5 @@
 // Assuming A, B, X, and Y are not part of the random letter pairs to avoid overlap with normal trials
-window.inducing = (function() {
+window.INDUCING = (function() {
   var core ={};
 
   const letters = "CDEFGHIJKLMNOPQRSTUVWXYZ".split('');
