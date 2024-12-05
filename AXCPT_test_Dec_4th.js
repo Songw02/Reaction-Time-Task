@@ -75,6 +75,14 @@ window.AXCPT_test = (function() {
         trial_duration: 4900
       });
   
+      timeline.push({
+        type: "html-keyboard-response",
+        stimulus: trial.probe_stimulus,
+        choices: ['f', 'j'],
+        trial_duration: 300, // Duration of probe display
+
+      });
+  
       // Conditional node to check if extending the response window is necessary
       timeline.push({
         timeline: [{
