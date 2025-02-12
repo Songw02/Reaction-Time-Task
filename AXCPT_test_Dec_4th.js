@@ -5,10 +5,10 @@ window.AXCPT_test = (function() {
   
     function weightedRandomSelect() {
       var weightedStimuli = [
-        { weight: 40, stimuli: { combo: 'AX', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">A</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">X</p>', correct_response: 'j' } },
-        { weight: 20, stimuli: { combo: 'AY', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">A</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">Y</p>', correct_response: 'f' } },
-        { weight: 20, stimuli: { combo: 'BX', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">B</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">X</p>', correct_response: 'f' } },
-        { weight: 20, stimuli: { combo: 'BY', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">B</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">Y</p>', correct_response: 'f' } }
+        { weight: 25, stimuli: { combo: 'AX', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">A</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">X</p>', correct_response: 'j' } },
+        { weight: 25, stimuli: { combo: 'AY', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">A</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">Y</p>', correct_response: 'f' } },
+        { weight: 25, stimuli: { combo: 'BX', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">B</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">X</p>', correct_response: 'f' } },
+        { weight: 25, stimuli: { combo: 'BY', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">B</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">Y</p>', correct_response: 'f' } }
       ];
       var totalWeight = weightedStimuli.reduce((total, item) => total + item.weight, 0);
       var random = Math.random() * totalWeight;
@@ -73,15 +73,22 @@ window.AXCPT_test = (function() {
         stimulus: '',
         choices: jsPsych.ALL_KEYS,
         response_ends_trial: false,
-        trial_duration: 4900
+        trial_duration: 700
+      });
+
+      timeline.push({
+        type: "html-keyboard-response",
+        stimulus: '',
+        choices: jsPsych.NO_KEYS,
+        trail_duration: Math.floor(Math.random() * (2000 - 1000)) + 1000
       });
   
       timeline.push({
         type: "html-keyboard-response",
         stimulus: trial.probe_stimulus,
         choices: ['f', 'j'],
-        trial_duration: 300, // Duration of probe display
-
+        trial_duration: 1000, // Duration of probe display
+        stimulus_duration: 300,
       });
   
       // Conditional node to check if extending the response window is necessary
@@ -100,10 +107,10 @@ window.AXCPT_test = (function() {
             }
           }
         }],
-        conditional_function: function() {
+        //conditional_function: function() {
           // Check if response was given during the probe; if so, skip the extension
-          return !responseGivenDuringProbe;
-        }
+          //return !responseGivenDuringProbe;
+        //}
       });
   
       timeline.push({
@@ -112,7 +119,7 @@ window.AXCPT_test = (function() {
           return "The response window is closed, the next trial will begin.";
         },
         choices: jsPsych.NO_KEYS,
-        trial_duration: 900
+        trial_duration: Math.floor(Math.random() * (2000 - 1000)) + 1000
       });
   
       // Assign the final timeline
