@@ -81,7 +81,7 @@ window.AXCPT_test = (function() {
         type: "html-keyboard-response",
         stimulus: variedtime.toString(),
         choices: jsPsych.NO_KEYS,
-        trail_duration: variedtime
+        trial_duration: variedtime
       });
   
       timeline.push({
