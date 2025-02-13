@@ -108,10 +108,10 @@ window.AXCPT_test = (function() {
             }
           }
         }],
-        //conditional_function: function() {
+        conditional_function: function() {
           // Check if response was given during the probe; if so, skip the extension
-          //return !responseGivenDuringProbe;
-        //}
+          return !responseGivenDuringProbe;
+        }
       });
   
       timeline.push({
