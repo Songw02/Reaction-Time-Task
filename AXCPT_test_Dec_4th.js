@@ -52,7 +52,8 @@ window.AXCPT_test = (function() {
     });
   
     let responseGivenDuringProbe = false;
-  
+    let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000
+    
     trials.forEach(trial => {
       timeline.push({
         type: "html-keyboard-response",
@@ -70,7 +71,7 @@ window.AXCPT_test = (function() {
   
       timeline.push({
         type: "html-keyboard-response",
-        stimulus: '700ms, recording predictions',
+        stimulus: "700ms, recording predictions",
         choices: jsPsych.ALL_KEYS,
         response_ends_trial: false,
         trial_duration: 700
@@ -78,9 +79,9 @@ window.AXCPT_test = (function() {
 
       timeline.push({
         type: "html-keyboard-response",
-        stimulus: '',
+        stimulus: variedtime.tostring(),
         choices: jsPsych.NO_KEYS,
-        trail_duration: Math.floor(Math.random() * (2000 - 1000)) + 1000
+        trail_duration: variedtime
       });
   
       timeline.push({
@@ -119,7 +120,7 @@ window.AXCPT_test = (function() {
           return "The response window is closed, the next trial will begin.";
         },
         choices: jsPsych.NO_KEYS,
-        trial_duration: Math.floor(Math.random() * (2000 - 1000)) + 1000
+        trial_duration: variedtime
       });
   
       // Assign the final timeline
