@@ -90,6 +90,7 @@ window.AXCPT_test = (function() {
       choices: ['f', 'j'],
       trial_duration: 1000, // Duration of probe display
       stimulus_duration: 300,
+      response_ends_trial: true
     });
 
     // Conditional node to check if extending the response window is necessary
