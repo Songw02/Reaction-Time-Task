@@ -71,7 +71,7 @@ window.AXCPT_test = (function() {
 
     timeline.push({
       type: "html-keyboard-response",
-      stimulus: "700ms, recording predictions",
+      stimulus: "",
       choices: jsPsych.ALL_KEYS,
       response_ends_trial: false,
       trial_duration: 700
@@ -79,7 +79,7 @@ window.AXCPT_test = (function() {
 
     timeline.push({
       type: "html-keyboard-response",
-      stimulus: variedtime.toString(),
+      stimulus: "",
       choices: jsPsych.NO_KEYS,
       trial_duration: variedtime.parseInt()
     });
