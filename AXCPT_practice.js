@@ -72,8 +72,8 @@ window.AXCPT_test = (function() {
     timeline.push({
       type: "html-keyboard-response",
       stimulus: "",
-      choices: jsPsych.ALL_KEYS,
-      response_ends_trial: false,
+      choices: jsPsych.NO_KEYS,
+      //response_ends_trial: false,
       trial_duration: 700
     });
 
