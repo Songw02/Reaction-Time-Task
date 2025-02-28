@@ -88,31 +88,16 @@ window.AXCPT_test = (function() {
       type: "html-keyboard-response",
       stimulus: trial.probe_stimulus,
       choices: ['f', 'j'],
-      trial_duration: 1000, // Duration of probe display
+      trial_duration: 1000,
       stimulus_duration: 300,
-      response_ends_trial: true
-    });
-
-    // Conditional node to check if extending the response window is necessary
-    
-    timeline.push({
-      timeline: [{
-        type: "html-keyboard-response",
-        stimulus: '', // No stimulus, just capture the response
-        choices: ['f', 'j'],
-        trial_duration: 1000, // Extended duration to capture responses
-        data: {
-          correct_response: trial.correct_response
-        },
-        on_finish: function(data) {
-          if (data.response !== null) {
-            data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response); // Evaluate correctness of the response
-          }
+      response_ends_trial: true,
+      data: {
+        correct_response: trial.correct_response
+      },
+      on_finish: function(data) {
+        if (data.response !== null) {
+          data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
         }
-      }],
-      conditional_function: function() {
-        // Check if response was given during the probe; if so, skip the extension
-        return !responseGivenDuringProbe;
       }
     });
           
