@@ -22,7 +22,7 @@ window.AXCPT_test = (function() {
     }
   }
 
-  const numTrials = 3; // Set to 100 or any other number based on your experimental design
+  const numTrials = 4; // Set to 100 or any other number based on your experimental design
   let trials = [];
   for (let i = 0; i < numTrials; i++) {
     trials.push(weightedRandomSelect());
@@ -81,7 +81,7 @@ window.AXCPT_test = (function() {
       type: "html-keyboard-response",
       stimulus: "",
       choices: jsPsych.NO_KEYS,
-      trial_duration: variedtime.parseInt()
+      trial_duration: variedtime
     });
 
     timeline.push({
