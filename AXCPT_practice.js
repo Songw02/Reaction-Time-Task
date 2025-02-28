@@ -94,7 +94,7 @@ window.AXCPT_test = (function() {
     });
 
     // Conditional node to check if extending the response window is necessary
-    /*
+    
     timeline.push({
       timeline: [{
         type: "html-keyboard-response",
@@ -115,7 +115,7 @@ window.AXCPT_test = (function() {
         return !responseGivenDuringProbe;
       }
     });
-          */
+          
 
     timeline.push({
       type: "html-keyboard-response",
