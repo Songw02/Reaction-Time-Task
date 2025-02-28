@@ -51,7 +51,7 @@ window.AXCPT_test = (function() {
     post_trial_gap: 2000
   });
 
-  let responseGivenDuringProbe = false;
+  //let responseGivenDuringProbe = false;
   
   trials.forEach(trial => {
     let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000
@@ -72,7 +72,7 @@ window.AXCPT_test = (function() {
     timeline.push({
       type: "html-keyboard-response",
       stimulus: "",
-      choices: jsPsych.NO_KEYS,
+      choices: jsPsych.ALL_KEYS,
       response_ends_trial: false,
       trial_duration: 700
     });
