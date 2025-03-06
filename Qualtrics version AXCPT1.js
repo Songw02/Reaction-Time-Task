@@ -1,4 +1,3 @@
-// Assuming A, B, X, and Y are not part of the random letter pairs to avoid overlap with normal trials
 window.AXCPT1 = (function() {
   var core ={};
 
@@ -23,19 +22,13 @@ window.AXCPT1 = (function() {
     }
   }
 
-  // Parameters to control the number of each type of trial
-  const numTrials = 10; // Set to 100 or any other number based on your experimental design, should be 78
-
-  // Generate trials
+  const numTrials = 8; // Set to 100 or any other number based on your experimental design
   let trials = [];
   for (let i = 0; i < numTrials; i++) {
     trials.push(weightedRandomSelect());
   }
-
   console.log(trials.length);
   console.log(trials); //log trial generated
-
-  // Shuffle trials to mix them
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -45,7 +38,7 @@ window.AXCPT1 = (function() {
 
   shuffleArray(trials);
 
-  var timeline = [];
+  let timeline = [];
 
   timeline.push({
     type: "html-keyboard-response",
