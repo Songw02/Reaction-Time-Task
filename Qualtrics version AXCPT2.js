@@ -24,7 +24,7 @@ window.AXCPT2 = (function() {
   }
 
   // Parameters to control the number of each type of trial
-  const numTrials = 78; // Set to 100 or any other number based on your experimental design
+  const numTrials = 10; // Set to 100 or any other number based on your experimental design, should be 78
 
   // Generate trials
   let trials = [];

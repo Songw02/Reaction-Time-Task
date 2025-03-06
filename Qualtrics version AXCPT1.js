@@ -24,7 +24,7 @@ window.AXCPT1 = (function() {
   }
 
   // Parameters to control the number of each type of trial
-  const numTrials = 78; // Set to 100 or any other number based on your experimental design
+  const numTrials = 10; // Set to 100 or any other number based on your experimental design, should be 78
 
   // Generate trials
   let trials = [];
@@ -62,6 +62,7 @@ window.AXCPT1 = (function() {
 
   // Adding trials to the timeline
   trials.forEach(trial => {
+    let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000
     // Fixation
     timeline.push({
       type: "html-keyboard-response",
@@ -83,7 +84,14 @@ window.AXCPT1 = (function() {
       type: "html-keyboard-response",
       stimulus: '',
       choices: jsPsych.NO_KEYS,
-      trial_duration: 4900
+      trial_duration: 700
+    });
+
+    timeline.push({
+      type: "html-keyboard-response",
+      stimulus: "",
+      choices: jsPsych.NO_KEYS,
+      trial_duration: variedtime
     });
 
     // Probe letter and initial response window
@@ -91,7 +99,8 @@ window.AXCPT1 = (function() {
       type: "html-keyboard-response",
       stimulus: trial.probe_stimulus,
       choices: ['f', 'j'],
-      trial_duration: 300, // Duration of probe display
+      trial_duration: 1000,
+      stimulus_duration: 300,
       data: { correct_response: trial.correct_response }
     });
 
@@ -120,7 +129,7 @@ window.AXCPT1 = (function() {
         }
       },
       choices: jsPsych.NO_KEYS,
-      trial_duration: 900
+      trial_duration: 400
     });
 
     core.timeline = timeline;
