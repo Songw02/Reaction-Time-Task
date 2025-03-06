@@ -59,8 +59,8 @@ window.AXCPT1 = (function() {
     stimulus: "<p>In this experiment, a pair of letters will appear in the center of the screen, one after the other.</p><p>If you see the sequence <strong>A-X</strong>, press the letter J on the keyboard as fast as you can.</p><p>For any other letter sequence, press the letter F.</p><p>Press any key to begin.</p>",
     post_trial_gap: 2000
   });
+  let responseGivenDuringProbe = false;
 
-  // Adding trials to the timeline
   trials.forEach(trial => {
     let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000
     // Fixation
