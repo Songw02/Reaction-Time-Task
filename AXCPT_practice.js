@@ -73,7 +73,6 @@ window.AXCPT_test = (function() {
       type: "html-keyboard-response",
       stimulus: "",
       choices: jsPsych.NO_KEYS,
-      //response_ends_trial: false,
       trial_duration: 700
     });
 

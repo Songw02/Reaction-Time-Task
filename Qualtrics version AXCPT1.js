@@ -45,10 +45,8 @@ window.AXCPT1 = (function() {
 
   shuffleArray(trials);
 
-  /* Create jsPsych timeline */
   var timeline = [];
 
-  /* Welcome and instructions */
   timeline.push({
     type: "html-keyboard-response",
     stimulus: "Welcome to the experiment. Press any key to begin."
@@ -59,19 +57,18 @@ window.AXCPT1 = (function() {
     stimulus: "<p>In this experiment, a pair of letters will appear in the center of the screen, one after the other.</p><p>If you see the sequence <strong>A-X</strong>, press the letter J on the keyboard as fast as you can.</p><p>For any other letter sequence, press the letter F.</p><p>Press any key to begin.</p>",
     post_trial_gap: 2000
   });
-  let responseGivenDuringProbe = false;
 
+  let responseGivenDuringProbe = false;
+  
   trials.forEach(trial => {
     let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000
-    // Fixation
     timeline.push({
       type: "html-keyboard-response",
       stimulus: '<div style="font-size:60px;">+</div>',
-      choices: jsPsych.NO_KEYS,
+      choices: jsPsych.ALL_KEYS,
       trial_duration: 300
     });
 
-    // Cue letter
     timeline.push({
       type: "html-keyboard-response",
       stimulus: trial.cue_stimulus,
@@ -79,10 +76,9 @@ window.AXCPT1 = (function() {
       trial_duration: 300
     });
 
-    // Delay (empty screen)
     timeline.push({
       type: "html-keyboard-response",
-      stimulus: '',
+      stimulus: "",
       choices: jsPsych.NO_KEYS,
       trial_duration: 700
     });
@@ -94,70 +90,78 @@ window.AXCPT1 = (function() {
       trial_duration: variedtime
     });
 
-    // Probe letter and initial response window
     timeline.push({
       type: "html-keyboard-response",
       stimulus: trial.probe_stimulus,
       choices: ['f', 'j'],
       trial_duration: 1000,
       stimulus_duration: 300,
-      data: { correct_response: trial.correct_response }
-    });
-
-    // Extend response window to capture late responses
-    timeline.push({
-      type: "html-keyboard-response",
-      stimulus: '', // No stimulus, just capture the response
-      choices: ['f', 'j'],
-      trial_duration: 1000, // Extended duration to capture responses
+      response_ends_trial: true,
+      data: {
+        correct_response: trial.correct_response
+      },
       on_finish: function(data) {
-        data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
+        if (data.response !== null) {
+          data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+        }
       }
-
-      // Assign the final timeline
     });
+          
 
-    // End trial message
     timeline.push({
       type: "html-keyboard-response",
       stimulus: function() {
-        var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
-        if(lastTrialData.response === null) {
-          return "Response too slow, please respond faster in the next trial.";
-        } else {
-          return "The response window is closed, the next trial will begin.";
-        }
+        return "The response window is closed, the next trial will begin.";
       },
       choices: jsPsych.NO_KEYS,
-      trial_duration: 400
+      trial_duration: variedtime
     });
 
+    // Assign the final timeline
     core.timeline = timeline;
-
   });
 
-core.on_finish = function (data) {
+  core.on_finish = function (data) {
+    /* Change 5: Summarizing and save the results to Qualtrics */
+    // summarize the results
+    // var trials = jsPsych.data.get().filter({
+    //     test_part: 'test'
+    // });
+    // var correct_trials = trials.filter({
+    //     correct: true
+    // });
+    // var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+    // var rt = Math.round(correct_trials.select('rt').mean());
 
-  var trial_data = jsPsych.data.get().values();
+    // save to qualtrics embedded data
+    // Qualtrics.SurveyEngine.setEmbeddedData("accuracy", accuracy);
+    // Qualtrics.SurveyEngine.setEmbeddedData("rt", rt);
+    // The Json string
+   // let jsonData_testing = JSON.stringify(jsPsych.data.get().json());
+    var trial_data = jsPsych.data.get().values();
 
-  var offset=0;
-  var chunk_size = 120;
-  var block = 0;
-  while (offset < trial_data.length){
-    let end_of_data = offset + chunk_size;
-    let curr_data = trial_data.slice(offset, end_of_data);
-    let varname = "jsPsychData_AXCPT1_"+block;
+    var offset=0;
+    var chunk_size = 120;
+    var block = 0;
+    while (offset < trial_data.length){
+      let curr_data = trial_data.slice(offset, chunk_size);
+      let varname = "jsPsychData_AXCPT1_"+block;
 
-    Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
+      Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
 
-    offset = end_of_data;
-    block += 1;
-  }
+      offset += chunk_size;
+      block += 1;
+    }
 
-  jQuery('#display_stage').remove();
-  jQuery('#display_stage_background').remove();
+    //Qualtrics.SurveyEngine.setEmbeddedData("jsPsychData_testing", jsonData_testing);
+        /* Change 6: Adding the clean up and continue functions.*/
+        // clear the stage
+    jQuery('#display_stage').remove();
+    jQuery('#display_stage_background').remove();
 
+    // simulate click on Qualtrics "next" button, making use of the Qualtrics JS API
+    // this.clickNextButton();
 }
 
-return core
+  return core
 })()
