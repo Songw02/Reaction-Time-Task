@@ -58,7 +58,7 @@ window.AXCPT_test = (function() {
     timeline.push({
       type: "html-keyboard-response",
       stimulus: '<div style="font-size:60px;">+</div>',
-      choices: jsPsych.NO_KEYS,
+      choices: jsPsych.ALL_KEYS,
       trial_duration: 300
     });
 
