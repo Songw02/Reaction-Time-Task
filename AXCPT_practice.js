@@ -116,8 +116,6 @@ window.AXCPT_test = (function() {
         var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
         if (lastTrialData.response === null) {
           return "Response too slow, please respond faster in the next trial.";
-        } else {
-          return "The response window is closed, the next trial will begin.";
         }
       },
       choices: jsPsych.NO_KEYS,
