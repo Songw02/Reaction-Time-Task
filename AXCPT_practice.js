@@ -22,13 +22,13 @@ window.AXCPT_test = (function() {
     }
   }
 
-  const numTrials = 4; // Set to 100 or any other number based on your experimental design
+  const numTrials = 4;
   let trials = [];
   for (let i = 0; i < numTrials; i++) {
     trials.push(weightedRandomSelect());
   }
   console.log(trials.length);
-  console.log(trials); //log trial generated
+  console.log(trials);
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -96,27 +96,41 @@ window.AXCPT_test = (function() {
       on_finish: function(data) {
         if (data.response !== null) {
           data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+          data.tooSlow = false;
+        } else {
+          data.tooSlow = true;
         }
       }
     });
-          
 
     timeline.push({
       type: "html-keyboard-response",
       stimulus: function() {
-        return "The response window is closed, the next trial will begin.";
+        return "";
       },
       choices: jsPsych.NO_KEYS,
       trial_duration: variedtime
     });
 
-    // Assign the final timeline
+    timeline.push({
+      type: "html-keyboard-response",
+      stimulus: function() {
+        var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
+        if (lastTrialData.tooSlow) {
+          return "Response too slow, please respond faster in the next trial.";
+        } else {
+          return "";
+        }
+      },
+      choices: jsPsych.NO_KEYS,
+      trial_duration: 700
+    });
+
     core.timeline = timeline;
   });
 
   core.on_finish = function (data) {
     var trial_data = jsPsych.data.get().values();
-
     var offset=0;
     var chunk_size = 120;
     var block = 0;
@@ -129,16 +143,8 @@ window.AXCPT_test = (function() {
       offset += chunk_size;
       block += 1;
     }
-
-    //Qualtrics.SurveyEngine.setEmbeddedData("jsPsychData_testing", jsonData_testing);
-        /* Change 6: Adding the clean up and continue functions.*/
-        // clear the stage
     jQuery('#display_stage').remove();
     jQuery('#display_stage_background').remove();
-
-    // simulate click on Qualtrics "next" button, making use of the Qualtrics JS API
-    // this.clickNextButton();
 }
-
   return core
 })()
