@@ -122,7 +122,7 @@ window.AXCPT1 = (function() {
     var block = 0;
     while (offset < trial_data.length){
       let curr_data = trial_data.slice(offset, chunk_size);
-      let varname = "jsPsychData_AXCPT_test_"+block;
+      let varname = "jsPsychData_testing_"+block;
 
       Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
 
