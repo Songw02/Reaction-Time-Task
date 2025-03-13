@@ -94,6 +94,7 @@ window.AXCPT_test = (function() {
       on_finish: function(data) {
         if (data.response !== null) {
           data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+          return "Response too slow, please respond faster in the next trial.";
         }
       }
     });
@@ -103,20 +104,6 @@ window.AXCPT_test = (function() {
       stimulus: "",
       choices: jsPsych.NO_KEYS,
       trial_duration: variedtime
-    });
-
-    timeline.push({
-      type: "html-keyboard-response",
-      stimulus: function() {
-        var lastTrialData = jsPsych.data.get().last(1).values()[0];
-        if (lastTrialData.response === null) {
-          return "Response too slow, please respond faster in the next trial.";
-        } else {
-          return "";
-        }
-      },
-      choices: jsPsych.NO_KEYS,
-      trial_duration: 900
     });
 
     core.timeline = timeline;
