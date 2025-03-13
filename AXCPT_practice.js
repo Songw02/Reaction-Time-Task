@@ -103,9 +103,7 @@ window.AXCPT_test = (function() {
 
     timeline.push({
       type: "html-keyboard-response",
-      stimulus: function() {
-        return "";
-      },
+      stimulus: "",
       choices: jsPsych.NO_KEYS,
       trial_duration: variedtime
     });
@@ -116,6 +114,8 @@ window.AXCPT_test = (function() {
         var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
         if (lastTrialData.response === null) {
           return "Response too slow, please respond faster in the next trial.";
+        } else {
+          return ""; // Empty to ensure no message appears when a response is given
         }
       },
       choices: jsPsych.NO_KEYS,
