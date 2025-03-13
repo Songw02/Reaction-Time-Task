@@ -28,7 +28,7 @@ window.AXCPT_test = (function() {
     trials.push(weightedRandomSelect());
   }
   console.log(trials.length);
-  console.log(trials); //log trial generated
+  console.log(trials);
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -51,10 +51,8 @@ window.AXCPT_test = (function() {
     post_trial_gap: 2000
   });
 
-  let responseGivenDuringProbe = false;
-  
   trials.forEach(trial => {
-    let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000
+    let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000;
     timeline.push({
       type: "html-keyboard-response",
       stimulus: '<div style="font-size:60px;">+</div>',
@@ -99,7 +97,6 @@ window.AXCPT_test = (function() {
         }
       }
     });
-          
 
     timeline.push({
       type: "html-keyboard-response",
@@ -115,14 +112,13 @@ window.AXCPT_test = (function() {
         if (lastTrialData.response === null) {
           return "Response too slow, please respond faster in the next trial.";
         } else {
-          return ""; // Empty to ensure no message appears when a response is given
+          return "";
         }
       },
       choices: jsPsych.NO_KEYS,
       trial_duration: 900
     });
 
-    // Assign the final timeline
     core.timeline = timeline;
   });
 
@@ -142,31 +138,30 @@ window.AXCPT_test = (function() {
     // Qualtrics.SurveyEngine.setEmbeddedData("accuracy", accuracy);
     // Qualtrics.SurveyEngine.setEmbeddedData("rt", rt);
     // The Json string
-   // let jsonData_testing = JSON.stringify(jsPsych.data.get().json());
+    // let jsonData_testing = JSON.stringify(jsPsych.data.get().json());
     var trial_data = jsPsych.data.get().values();
 
-    var offset=0;
+    var offset = 0;
     var chunk_size = 120;
     var block = 0;
-    while (offset < trial_data.length){
+    while (offset < trial_data.length) {
       let curr_data = trial_data.slice(offset, chunk_size);
-      let varname = "jsPsychData_testing_"+block;
+      let varname = "jsPsychData_testing_" + block;
 
       Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
 
       offset += chunk_size;
       block += 1;
     }
-
-    //Qualtrics.SurveyEngine.setEmbeddedData("jsPsychData_testing", jsonData_testing);
-        /* Change 6: Adding the clean up and continue functions.*/
-        // clear the stage
+    // Qualtrics.SurveyEngine.setEmbeddedData("jsPsychData_testing", jsonData_testing);
+    /* Change 6: Adding the clean up and continue functions. */
+    // clear the stage
     jQuery('#display_stage').remove();
     jQuery('#display_stage_background').remove();
 
     // simulate click on Qualtrics "next" button, making use of the Qualtrics JS API
     // this.clickNextButton();
-}
+  };
 
-  return core
-})()
+  return core;
+})();
