@@ -1,6 +1,5 @@
-// Assuming A, B, X, and Y are not part of the random letter pairs to avoid overlap with normal trials
 window.AXCPT_test = (function() {
-  var core ={};
+  var core = {};
 
   const letters = "CDEFGHIJKLMNOPQRSTUVWXYZ".split('');
 
@@ -23,19 +22,14 @@ window.AXCPT_test = (function() {
     }
   }
 
-  // Parameters to control the number of each type of trial
-  const numTrials = 4; // Set to 100 or any other number based on your experimental design
-
-  // Generate trials
+  const numTrials = 4;
   let trials = [];
   for (let i = 0; i < numTrials; i++) {
     trials.push(weightedRandomSelect());
   }
-
   console.log(trials.length);
-  console.log(trials); //log trial generated
-
-  // Shuffle trials to mix them
+  console.log(trials);
+  
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -45,10 +39,8 @@ window.AXCPT_test = (function() {
 
   shuffleArray(trials);
 
-  /* Create jsPsych timeline */
-  var timeline = [];
+  let timeline = [];
 
-  /* Welcome and instructions */
   timeline.push({
     type: "html-keyboard-response",
     stimulus: "Welcome to the experiment. Press any key to begin."
@@ -60,18 +52,15 @@ window.AXCPT_test = (function() {
     post_trial_gap: 2000
   });
 
-  // Adding trials to the timeline
   trials.forEach(trial => {
-    // Fixation
     let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000;
     timeline.push({
       type: "html-keyboard-response",
       stimulus: '<div style="font-size:60px;">+</div>',
-      choices: jsPsych.NO_KEYS,
+      choices: jsPsych.ALL_KEYS,
       trial_duration: 300
     });
 
-    // Cue letter
     timeline.push({
       type: "html-keyboard-response",
       stimulus: trial.cue_stimulus,
@@ -79,10 +68,9 @@ window.AXCPT_test = (function() {
       trial_duration: 300
     });
 
-    // Delay (empty screen)
     timeline.push({
       type: "html-keyboard-response",
-      stimulus: '',
+      stimulus: "",
       choices: jsPsych.NO_KEYS,
       trial_duration: 700
     });
@@ -94,7 +82,6 @@ window.AXCPT_test = (function() {
       trial_duration: variedtime
     });
 
-    // Probe letter and initial response window
     timeline.push({
       type: "html-keyboard-response",
       stimulus: trial.probe_stimulus,
@@ -108,45 +95,45 @@ window.AXCPT_test = (function() {
       on_finish: function(data) {
         if (data.response !== null) {
           data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
-          return "Response too slow, please respond faster in the next trial.";
         }
       }
     });
 
+    timeline.push({
+      type: "html-keyboard-response",
+      stimulus: "",
+      choices: jsPsych.NO_KEYS,
+      trial_duration: variedtime
+    });
 
+    core.timeline = timeline;
   });
 
-  core.on_finish = function(data) {
-    // Retrieve the data from jsPsych
+  core.on_finish = function (data) {
+    /* Change 5: Summarizing and save the results to Qualtrics */
     var trial_data = jsPsych.data.get().values();
-  
-    // Initialize offset and chunk size variables
+
     var offset = 0;
-    var chunk_size = 120; // This is the size of each data chunk to be saved
+    var chunk_size = 120;
     var block = 0;
-  
-    // Loop to save data in chunks
     while (offset < trial_data.length) {
-      // Calculate the end of the current chunk
-      let end = offset + chunk_size;
-      
-      // Get the current chunk of data
-      let curr_data = trial_data.slice(offset, end);
+      let curr_data = trial_data.slice(offset, chunk_size);
       let varname = "jsPsychData_testing_" + block;
-  
-      // Save the current chunk to Qualtrics Embedded Data
+
       Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
-  
-      // Update offset and block number
-      offset = end;
+
+      offset += chunk_size;
       block += 1;
     }
-  
-    // Remove the display stage elements
+
+    /* Change 6: Adding the clean up and continue functions. */
+    // clear the stage
     jQuery('#display_stage').remove();
     jQuery('#display_stage_background').remove();
-  }
-  
 
-return core
-})()
+    // simulate click on Qualtrics "next" button, making use of the Qualtrics JS API
+    // this.clickNextButton();
+  };
+
+  return core;
+})();
