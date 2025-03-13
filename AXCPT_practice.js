@@ -63,6 +63,7 @@ window.AXCPT_test = (function() {
   // Adding trials to the timeline
   trials.forEach(trial => {
     // Fixation
+    let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000;
     timeline.push({
       type: "html-keyboard-response",
       stimulus: '<div style="font-size:60px;">+</div>',
@@ -83,7 +84,14 @@ window.AXCPT_test = (function() {
       type: "html-keyboard-response",
       stimulus: '',
       choices: jsPsych.NO_KEYS,
-      trial_duration: 4900
+      trial_duration: 700
+    });
+
+    timeline.push({
+      type: "html-keyboard-response",
+      stimulus: "",
+      choices: jsPsych.NO_KEYS,
+      trial_duration: variedtime
     });
 
     // Probe letter and initial response window
@@ -91,39 +99,20 @@ window.AXCPT_test = (function() {
       type: "html-keyboard-response",
       stimulus: trial.probe_stimulus,
       choices: ['f', 'j'],
-      trial_duration: 300, // Duration of probe display
-      data: { correct_response: trial.correct_response }
-    });
-
-    // Extend response window to capture late responses
-    timeline.push({
-      type: "html-keyboard-response",
-      stimulus: '', // No stimulus, just capture the response
-      choices: ['f', 'j'],
-      trial_duration: 1000, // Extended duration to capture responses
-      on_finish: function(data) {
-        data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
-      }
-
-      // Assign the final timeline
-    });
-
-    // End trial message
-    timeline.push({
-      type: "html-keyboard-response",
-      stimulus: function() {
-        var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
-        if(lastTrialData.response === null) {
-          return "Response too slow, please respond faster in the next trial.";
-        } else {
-          return "";
-        }
+      trial_duration: 1000,
+      stimulus_duration: 300,
+      response_ends_trial: true,
+      data: {
+        correct_response: trial.correct_response
       },
-      choices: jsPsych.NO_KEYS,
-      trial_duration: 900
+      on_finish: function(data) {
+        if (data.response !== null) {
+          data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+          return "Response too slow, please respond faster in the next trial.";
+        }
+      }
     });
 
-    core.timeline = timeline;
 
   });
 
