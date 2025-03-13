@@ -1,4 +1,4 @@
-window.AXCPT1 = (function() {
+window.AXCPT_test = (function() {
   var core ={};
 
   const letters = "CDEFGHIJKLMNOPQRSTUVWXYZ".split('');
