@@ -27,8 +27,10 @@ window.AXCPT_test = (function() {
   for (let i = 0; i < numTrials; i++) {
     trials.push(weightedRandomSelect());
   }
+
   console.log(trials.length);
   console.log(trials);
+
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -96,9 +98,6 @@ window.AXCPT_test = (function() {
       on_finish: function(data) {
         if (data.response !== null) {
           data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
-          data.tooSlow = false;
-        } else {
-          data.tooSlow = true;
         }
       }
     });
@@ -116,14 +115,18 @@ window.AXCPT_test = (function() {
       type: "html-keyboard-response",
       stimulus: function() {
         var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
-        if (lastTrialData.tooSlow) {
-          return "Response too slow, please respond faster in the next trial.";
+        let correctAnswer = lastTrialData.correct_response.toUpperCase();
+
+        if (lastTrialData.response === null) {
+          return `There was no response received. The correct answer was <strong>${correctAnswer}</strong>.`;
+        } else if (lastTrialData.correct) {
+          return "That's correct!";
         } else {
-          return "";
+          return `That's incorrect. The correct answer was <strong>${correctAnswer}</strong>.`;
         }
       },
       choices: jsPsych.NO_KEYS,
-      trial_duration: 700
+      trial_duration: 900
     });
 
     core.timeline = timeline;
