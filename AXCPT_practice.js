@@ -1,5 +1,5 @@
 window.AXCPT_test = (function() {
-  var core = {};
+  var core ={};
 
   const letters = "CDEFGHIJKLMNOPQRSTUVWXYZ".split('');
 
@@ -22,14 +22,13 @@ window.AXCPT_test = (function() {
     }
   }
 
-  const numTrials = 4;
+  const numTrials = 4; // Set to 100 or any other number based on your experimental design
   let trials = [];
   for (let i = 0; i < numTrials; i++) {
     trials.push(weightedRandomSelect());
   }
   console.log(trials.length);
-  console.log(trials);
-  
+  console.log(trials); //log trial generated
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -52,8 +51,10 @@ window.AXCPT_test = (function() {
     post_trial_gap: 2000
   });
 
+  let responseGivenDuringProbe = false;
+  
   trials.forEach(trial => {
-    let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000;
+    let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000
     timeline.push({
       type: "html-keyboard-response",
       stimulus: '<div style="font-size:60px;">+</div>',
@@ -95,30 +96,50 @@ window.AXCPT_test = (function() {
       on_finish: function(data) {
         if (data.response !== null) {
           data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+          return "Response too slow, please respond faster in the next trial.";
         }
       }
     });
+          
 
     timeline.push({
       type: "html-keyboard-response",
-      stimulus: "",
+      stimulus: function() {
+        return "";
+      },
       choices: jsPsych.NO_KEYS,
       trial_duration: variedtime
     });
 
+    // Assign the final timeline
     core.timeline = timeline;
   });
 
   core.on_finish = function (data) {
     /* Change 5: Summarizing and save the results to Qualtrics */
+    // summarize the results
+    // var trials = jsPsych.data.get().filter({
+    //     test_part: 'test'
+    // });
+    // var correct_trials = trials.filter({
+    //     correct: true
+    // });
+    // var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+    // var rt = Math.round(correct_trials.select('rt').mean());
+
+    // save to qualtrics embedded data
+    // Qualtrics.SurveyEngine.setEmbeddedData("accuracy", accuracy);
+    // Qualtrics.SurveyEngine.setEmbeddedData("rt", rt);
+    // The Json string
+   // let jsonData_testing = JSON.stringify(jsPsych.data.get().json());
     var trial_data = jsPsych.data.get().values();
 
-    var offset = 0;
+    var offset=0;
     var chunk_size = 120;
     var block = 0;
-    while (offset < trial_data.length) {
+    while (offset < trial_data.length){
       let curr_data = trial_data.slice(offset, chunk_size);
-      let varname = "jsPsychData_testing_" + block;
+      let varname = "jsPsychData_testing_"+block;
 
       Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
 
@@ -126,14 +147,15 @@ window.AXCPT_test = (function() {
       block += 1;
     }
 
-    /* Change 6: Adding the clean up and continue functions. */
-    // clear the stage
+    //Qualtrics.SurveyEngine.setEmbeddedData("jsPsychData_testing", jsonData_testing);
+        /* Change 6: Adding the clean up and continue functions.*/
+        // clear the stage
     jQuery('#display_stage').remove();
     jQuery('#display_stage_background').remove();
 
     // simulate click on Qualtrics "next" button, making use of the Qualtrics JS API
     // this.clickNextButton();
-  };
+}
 
-  return core;
-})();
+  return core
+})()
