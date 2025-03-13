@@ -110,6 +110,20 @@ window.AXCPT_test = (function() {
       trial_duration: variedtime
     });
 
+    timeline.push({
+      type: "html-keyboard-response",
+      stimulus: function() {
+        var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
+        if (lastTrialData.response === null) {
+          return "Response too slow, please respond faster in the next trial.";
+        } else {
+          return "The response window is closed, the next trial will begin.";
+        }
+      },
+      choices: jsPsych.NO_KEYS,
+      trial_duration: 900
+    });
+
     // Assign the final timeline
     core.timeline = timeline;
   });
