@@ -104,7 +104,7 @@ window.AXCPT_test = (function() {
     timeline.push({
       type: "html-keyboard-response",
       stimulus: function() {
-        return "The response window is closed, the next trial will begin.";
+        return "";
       },
       choices: jsPsych.NO_KEYS,
       trial_duration: variedtime
