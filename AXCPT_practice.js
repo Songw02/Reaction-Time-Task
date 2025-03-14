@@ -96,8 +96,26 @@ window.AXCPT_test = (function() {
       on_finish: function(data) {
         if (data.response !== null) {
           data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+        } else {
+          data.correct = false; // Mark as incorrect if no response was given
+          data.too_slow = true; // Add a flag to check later
         }
       }
+    });
+    
+    // Display "Response too slow" message if no response was recorded
+    timeline.push({
+      type: "html-keyboard-response",
+      stimulus: function() {
+        var last_trial = jsPsych.data.getLastTrialData().values()[0];
+        if (last_trial.too_slow) {
+          return "<p style='color: red; font-size: 24px;'>Response too slow, please respond faster in the next trial.</p>";
+        } else {
+          return "";
+        }
+      },
+      choices: jsPsych.NO_KEYS,
+      trial_duration: 1000
     });
           
 
