@@ -27,10 +27,8 @@ window.AXCPT_test = (function() {
   for (let i = 0; i < numTrials; i++) {
     trials.push(weightedRandomSelect());
   }
-
   console.log(trials.length);
   console.log(trials);
-
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -101,34 +99,15 @@ window.AXCPT_test = (function() {
         }
       }
     });
-
-    timeline.push({
-      type: "html-keyboard-response",
-      stimulus: "",
-      choices: jsPsych.NO_KEYS,
-      trial_duration: variedtime
-    });
+          
 
     timeline.push({
       type: "html-keyboard-response",
       stimulus: function() {
-        var lastTrialData = jsPsych.data.get().last(1).values()[0]; // Get last trial safely
-        if (!lastTrialData || !lastTrialData.correct_response) {
-          return "Trial data not found. Please continue.";
-        }
-
-        let correctAnswer = lastTrialData.correct_response.toUpperCase();
-
-        if (lastTrialData.response === null) {
-          return `No response was received. The correct answer was <strong>${correctAnswer}</strong>.`;
-        } else if (lastTrialData.correct) {
-          return "That's correct!";
-        } else {
-          return `That's incorrect. The correct answer was <strong>${correctAnswer}</strong>.`;
-        }
+        return "";
       },
       choices: jsPsych.NO_KEYS,
-      trial_duration: 900
+      trial_duration: variedtime
     });
 
     core.timeline = timeline;
