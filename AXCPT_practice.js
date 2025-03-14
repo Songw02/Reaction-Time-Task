@@ -109,7 +109,7 @@ window.AXCPT_test = (function() {
       stimulus: function() {
         var last_trial = jsPsych.data.getLastTrialData().values()[0];
         if (last_trial.too_slow) {
-          return "<p style='color: red; font-size: 24px;'>Response too slow, please respond faster in the next trial.</p>";
+          return "Response too slow, please respond faster in the next trial.";
         } else {
           return "";
         }
