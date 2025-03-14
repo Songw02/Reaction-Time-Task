@@ -1,5 +1,5 @@
 // Assuming A, B, X, and Y are not part of the random letter pairs to avoid overlap with normal trials
-window.AXCPT2 = (function() {
+window.AXCPT1 = (function() {
   var core ={};
 
   const letters = "CDEFGHIJKLMNOPQRSTUVWXYZ".split('');
@@ -133,13 +133,12 @@ core.on_finish = function (data) {
   var chunk_size = 120;
   var block = 0;
   while (offset < trial_data.length){
-    let end_of_data = offset + chunk_size;
     let curr_data = trial_data.slice(offset, end_of_data);
-    let varname = "jsPsychData_AXCPT2_"+block;
+    let varname = "jsPsychData_AXCPT1_"+block;
 
     Qualtrics.SurveyEngine.setEmbeddedData(varname, JSON.stringify(curr_data));
 
-    offset = end_of_data;
+    offset += chunk_size;
     block += 1;
   }
 
