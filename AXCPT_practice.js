@@ -119,14 +119,14 @@ window.AXCPT_test = (function() {
     });
           
 
-    timeline.push({
-      type: "html-keyboard-response",
-      stimulus: function() {
-        return "";
-      },
-      choices: jsPsych.NO_KEYS,
-      trial_duration: variedtime
-    });
+    //timeline.push({
+      //type: "html-keyboard-response",
+      //stimulus: function() {
+        //return "";
+      //},
+      //choices: jsPsych.NO_KEYS,
+      //trial_duration: variedtime
+    //});
 
     core.timeline = timeline;
   });
