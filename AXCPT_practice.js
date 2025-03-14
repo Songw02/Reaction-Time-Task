@@ -104,9 +104,7 @@ window.AXCPT_test = (function() {
 
     timeline.push({
       type: "html-keyboard-response",
-      stimulus: function() {
-        return "";
-      },
+      stimulus: "",
       choices: jsPsych.NO_KEYS,
       trial_duration: variedtime
     });
@@ -114,11 +112,15 @@ window.AXCPT_test = (function() {
     timeline.push({
       type: "html-keyboard-response",
       stimulus: function() {
-        var lastTrialData = jsPsych.data.getLastTrialData().values()[0];
+        var lastTrialData = jsPsych.data.get().last(1).values()[0]; // Get last trial safely
+        if (!lastTrialData || !lastTrialData.correct_response) {
+          return "Trial data not found. Please continue.";
+        }
+
         let correctAnswer = lastTrialData.correct_response.toUpperCase();
 
         if (lastTrialData.response === null) {
-          return `There was no response received. The correct answer was <strong>${correctAnswer}</strong>.`;
+          return `No response was received. The correct answer was <strong>${correctAnswer}</strong>.`;
         } else if (lastTrialData.correct) {
           return "That's correct!";
         } else {
