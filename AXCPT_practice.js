@@ -97,13 +97,12 @@ window.AXCPT_test = (function() {
         if (data.response !== null) {
           data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
         } else {
-          data.correct = false; // Mark as incorrect if no response was given
-          data.too_slow = true; // Add a flag to check later
+          data.correct = false;
+          data.too_slow = true;
         }
       }
     });
-    
-    // Display "Response too slow" message if no response was recorded
+
     timeline.push({
       type: "html-keyboard-response",
       stimulus: function() {
