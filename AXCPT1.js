@@ -5,10 +5,10 @@ window.AXCPT1 = (function() {
   
     function weightedRandomSelect() {
       var weightedStimuli = [
-        { weight: 25, stimuli: { combo: 'AX', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">A</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">X</p>', correct_response: 'j' } },
-        { weight: 25, stimuli: { combo: 'AY', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">A</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">Y</p>', correct_response: 'f' } },
-        { weight: 25, stimuli: { combo: 'BX', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">B</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">X</p>', correct_response: 'f' } },
-        { weight: 25, stimuli: { combo: 'BY', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">B</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">Y</p>', correct_response: 'f' } }
+        { weight: 70, stimuli: { combo: 'AX', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">A</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">X</p>', correct_response: 'j' } },
+        { weight: 10, stimuli: { combo: 'AY', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">A</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">Y</p>', correct_response: 'f' } },
+        { weight: 10, stimuli: { combo: 'BX', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">B</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">X</p>', correct_response: 'f' } },
+        { weight: 10, stimuli: { combo: 'BY', cue_stimulus: '<p style="font-size:80px; font-family: Helvetica;">B</p>', probe_stimulus: '<p style="font-size:80px; font-family: Helvetica;">Y</p>', correct_response: 'f' } }
       ];
       var totalWeight = weightedStimuli.reduce((total, item) => total + item.weight, 0);
       var random = Math.random() * totalWeight;
@@ -97,13 +97,12 @@ window.AXCPT1 = (function() {
           if (data.response !== null) {
             data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
           } else {
-            data.correct = false; // Mark as incorrect if no response was given
-            data.too_slow = true; // Add a flag to check later
+            data.correct = false;
+            data.too_slow = true;
           }
         }
       });
       
-      // Display "Response too slow" message if no response was recorded
       timeline.push({
         type: "html-keyboard-response",
         stimulus: function() {

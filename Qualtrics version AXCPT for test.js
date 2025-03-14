@@ -23,19 +23,16 @@ window.AXCPT2 = (function() {
     }
   }
 
-  // Parameters to control the number of each type of trial
-  const numTrials = 10; // Set to 100 or any other number based on your experimental design, should be 78
+  const numTrials = 10;
 
-  // Generate trials
   let trials = [];
   for (let i = 0; i < numTrials; i++) {
     trials.push(weightedRandomSelect());
   }
 
   console.log(trials.length);
-  console.log(trials); //log trial generated
+  console.log(trials);
 
-  // Shuffle trials to mix them
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -45,10 +42,8 @@ window.AXCPT2 = (function() {
 
   shuffleArray(trials);
 
-  /* Create jsPsych timeline */
   var timeline = [];
 
-  /* Welcome and instructions */
   timeline.push({
     type: "html-keyboard-response",
     stimulus: "Welcome to the experiment. Press any key to begin."
@@ -60,10 +55,9 @@ window.AXCPT2 = (function() {
     post_trial_gap: 2000
   });
 
-  // Adding trials to the timeline
   trials.forEach(trial => {
     let variedtime = Math.floor(Math.random() * (2000 - 1000)) + 1000
-    // Fixation
+
     timeline.push({
       type: "html-keyboard-response",
       stimulus: '<div style="font-size:60px;">+</div>',
@@ -71,7 +65,6 @@ window.AXCPT2 = (function() {
       trial_duration: 300
     });
 
-    // Cue letter
     timeline.push({
       type: "html-keyboard-response",
       stimulus: trial.cue_stimulus,
@@ -79,7 +72,6 @@ window.AXCPT2 = (function() {
       trial_duration: 300
     });
 
-    // Delay (empty screen)
     timeline.push({
       type: "html-keyboard-response",
       stimulus: '',
@@ -94,7 +86,6 @@ window.AXCPT2 = (function() {
       trial_duration: variedtime
     });
 
-    // Probe letter and initial response window
     timeline.push({
       type: "html-keyboard-response",
       stimulus: trial.probe_stimulus,
@@ -104,20 +95,26 @@ window.AXCPT2 = (function() {
       data: { correct_response: trial.correct_response }
     });
 
-    // Extend response window to capture late responses
     timeline.push({
       type: "html-keyboard-response",
-      stimulus: '', // No stimulus, just capture the response
+      stimulus: trial.probe_stimulus,
       choices: ['f', 'j'],
-      trial_duration: 1000, // Extended duration to capture responses
+      trial_duration: 1000,
+      stimulus_duration: 300,
+      response_ends_trial: true,
+      data: {
+        correct_response: trial.correct_response
+      },
       on_finish: function(data) {
-        data.correct = jsPsych.pluginAPI.compareKeys(data.response, trial.correct_response);
+        if (data.response !== null) {
+          data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+        } else {
+          data.correct = false;
+          data.too_slow = true;
+        }
       }
-
-      // Assign the final timeline
     });
 
-    // End trial message
     timeline.push({
       type: "html-keyboard-response",
       stimulus: function() {
@@ -125,7 +122,7 @@ window.AXCPT2 = (function() {
         if(lastTrialData.response === null) {
           return "Response too slow, please respond faster in the next trial.";
         } else {
-          return "The response window is closed, the next trial will begin.";
+          return "";
         }
       },
       choices: jsPsych.NO_KEYS,
