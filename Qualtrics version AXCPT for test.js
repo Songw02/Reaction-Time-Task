@@ -1,4 +1,3 @@
-// Assuming A, B, X, and Y are not part of the random letter pairs to avoid overlap with normal trials
 window.AXCPT1 = (function() {
   var core ={};
 
