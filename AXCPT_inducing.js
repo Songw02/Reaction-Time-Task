@@ -22,7 +22,7 @@ window.INDUCING = (function() {
     }
   }
 
-  const numTrials = 10; 
+  const numTrials = 175; 
 
   let trials = [];
   for (let i = 0; i < numTrials; i++) {

@@ -22,7 +22,7 @@ window.AXCPT2 = (function() {
     }
   }
 
-  const numTrials = 10;
+  const numTrials = 78;
 
   let trials = [];
   for (let i = 0; i < numTrials; i++) {
